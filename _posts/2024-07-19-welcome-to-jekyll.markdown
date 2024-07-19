@@ -1,29 +1,32 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "Chapter 10. 데이터 탐색과 시각화"
 date:   2024-07-19 21:14:31 +0900
-categories: jekyll update
+categories: ML Session
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+* 진도: 131p~
 
-`YEAR-MONTH-DAY-title.MARKUP`
+# 데이터 탐색과 시각화
+* EDA 단계에서 데이터 파악을 좀 더 효율적으로 하기 위해 시각화를 하기도 하지만, **데이터 시각화의 궁극적 목적은 분석 결과를 커뮤니케이션 하기 위함**이다.
+1. 시간 시각화
+2. 비교 시각화
+3. 분포 시각화
+4. 관계 시각화
+5. 공간 시각화
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+## 탐색적 데이터 분석(EDA)
+* 가공하지 않은 원천의 데이터를 있는 그대로 탐색하고 분석하는 기법
+* **EDA를 할 때는 극단적인 해석은 피해야 하며 지나친 추론이나 자의적 해석도 지양해야 한다.**
 
-Jekyll also offers powerful support for code snippets:
+### 엑셀을 활용한 EDA
+* 각 데이터 샘플을 1000개씩 뽑아서 엑셀에 붙여 놓고 변수와 설명 리스트와 함께 눈으로 쭉 살펴보는 것이다.
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+### 탐색적 데이터 분석 실습
+* info(): 데이터를 구성하는 행과 열의 크기와 각 칼럼을 구성하는 값의 자료형 등을 확인할 수 있다.
+* 결측값 확인 후 처리 (결측값: 알려지지 않고, 수집되지 않거나 잘못 입력된 데이터 세트의 값)
+* describe(): 평균, 표준편차, 최대 최솟값 등을 한 번에 확인할 수 있다.
+* 왜도: 분포의 비대칭도를 나타내는 통계량으로, 카이제곱분포와 같이 오른쪽으로 긴 꼬리를 가진 경우 양수이고 왼쪽으로 긴 꼬리를 가지면 음수이다.
+* 첨도: 분포가 정규분포보다 얼마나 뾰족하거나 완만한지의 정도를 나타내는 척도이고, 뾰족할수록 첨도값이 크다.
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+## 공분산과 상관성 분석
