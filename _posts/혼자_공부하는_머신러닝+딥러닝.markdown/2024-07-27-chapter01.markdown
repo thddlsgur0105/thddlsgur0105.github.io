@@ -1,0 +1,9 @@
+---
+layout: post
+title:  "Chapter 01. 인공지능과 머신러닝, 딥러닝"
+date:   2024-07-27 21:14:31 +0900
+categories: ML Session
+---
+
+* 진도: 183p~
+* *이해되지 않는 부분 표시* , **중요한 부분 표시**
