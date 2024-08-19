@@ -15,7 +15,7 @@ categories: ML Session
 * 선형방정식의 결과는 어떤 값도 가능하지만 이 값이 *확률*이 되려면 **시그모이드 함수(sigmoid function) (또는 로지스틱 함수)**를 사용해야 합니다.
 * 넘파이 배열은 True, False 값을 전달하여 행을 선택할 수 있는데, 이를 **불리언 인덱싱(boolean indexing)**이라고 합니다.
 
-![epoch](https://github.com/thddlsgur0105/thddlsgur0105.github.io/blob/master/images/18.png)
+![epoch](../assets/lib/images/18.png)
 
 ### 로지스틱 회귀로 다중 분류 수행하기
 * max_iter 매개변수에서 반복횟수를 지정하며 기본값은 100입니다.
@@ -36,17 +36,17 @@ categories: ML Session
 * 훈련 세트를 한 번 모두 사용하는 과정을 에포크(epoch)라고 부릅니다.
 * 1개의 샘플 말고 무작위로 몇 개의 샘플을 사용해 경사 하강법을 수행하는 방식은 미니배치 경사 하강법(minibatch gradient descent)라고 부릅니다.
 
-![epoch](https://github.com/thddlsgur0105/thddlsgur0105.github.io/blob/master/images/17.png)
+![epoch](../assets/lib/images/17.png)
 
 ## 손실함수(loss function)
 * 어떤 문제에서 머신러닝 알고리즘이 얼마나 엉터리인지를 측정하는 기준입니다.
 * 이 손실함수의 값은 작을수록 좋습니다.
 * 대표적으로 로지스틱 손실 함수 혹은 이진 크로스엔트로피 손실 함수를 사용하고, 다중 분류에서는 크로스엔트로피 손실 함수를 사용합니다.
 
-![epoch](https://github.com/thddlsgur0105/thddlsgur0105.github.io/blob/master/images/16.png)
+![epoch](../assets/lib/images/16.png)
 
 ## 에포크와 과대/과소적합
 * 에포크가 너무 적으면 훈련 세트를 덜 학습하므로 과소적합이, 너무 많으면 과대적합이 될 수 있습니다.
 * 따라서 훈련을 진행하면서 과대적합이 시작하기 전에 훈련을 멈추어 조기 종료를 해 주어야 합니다.
 
-![epoch](https://github.com/thddlsgur0105/thddlsgur0105.github.io/blob/master/images/15.png)
+![epoch](../assets/lib/images/15.png)

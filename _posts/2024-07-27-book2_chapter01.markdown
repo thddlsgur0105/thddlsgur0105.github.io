@@ -59,7 +59,7 @@ categories: ML Session
 
 * 맨허튼 거리와 유클리드 거리
 
-![man_distance](https://github.com/thddlsgur0105/thddlsgur0105.github.io/blob/master/images/Manhattan_distance.svg)
+![man_distance](../assets/lib/images/Manhattan_distance.svg)
 
 * 확인 문제
 1. 1
