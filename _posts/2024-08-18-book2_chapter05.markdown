@@ -1,0 +1,9 @@
+---
+layout: post
+title:  "8.18 Chapter 05"
+date:   2024-08-18 19:02:31 +0900
+categories: ML Session
+---
+
+# 트리 알고리즘
+.
