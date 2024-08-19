@@ -9,8 +9,6 @@ categories: ML Session
 
 ## 01-1 인공지능과 머신러닝, 딥러닝
 
-![artificial_history](../assets/lib/images/1.png)
-
 * 인공지능: 사람처럼 학습하고 추론할 수 있는 지능을 가진 컴퓨터 시스템을 만드는 기술
     * **인공일반지능** 혹은 **강인공지능**: 흔히 영화 속의 인공지능
     * **약인공지능**: 현실에서 우리가 마주하고 있는 인공지능으로, 특정 분여에서 사람의 일을 도와주는 보조 역할만 가능하다.
@@ -20,14 +18,13 @@ categories: ML Session
 * 머신러닝: 규칙을 일일히 프로그래밍하지 않아도 자동으로 데이터에서 규칙을 학습하는 알고리즘을 연구하는 분야이다.
     * 통계학에서 유래된 머신러닝 알고리즘이 많으며 통계학과 컴퓨터 과학 분야가 상호 작용하면서 발전하고 있다.
     * 사이킷런: 컴퓨터 과학 분야의 대표적인 머신러닝 라이브러리
-    <img src="../assets/lib/images/2.png" width="120" height="70"/>
+    
 
 ---
 
 * 딥러닝: 많은 머신러닝 알고리즘 중에 **인공 신경망**을 기반으로 한 방법들을 통칭하여 부르는 말
 * 딥러닝 라이브러리: 구글의 *텐서플로*, 페이스북의 *파이토치*
-<img src="../assets/lib/images/3.png" width="150" height="50"/>
-<img src="../assets/lib/images/4.png" width="150" height="50"/>
+
 
 ## 01-2 코랩과 주피터 노트북
 * 코랩: 구글 계정이 있으면 누구나 사용할 수 있는 **웹 브라우저 기반의 파이썬 코드 실행 환경**
@@ -79,7 +76,6 @@ bream_weight[0] = 242.0 # 특성 2. 도미의 무게
     plt.show()
     ```
 
-    <img src="../assets/lib/images/5.png" width="500" height="400" title="산점도 예시"/>
 
 ---
 ### 첫 번째 머신러닝 프로그램
@@ -151,7 +147,6 @@ kn_49.score(fish_data, fish_target) # 0.7142857142857143 ~= 35/49
 * 맨허튼 거리와 유클리드 거리
     * 빨강, 파랑, 노랑: 맨허튼 거리 / 초록: 유클리드 거리
 
-    <img src="../assets/lib/images/Manhattan_distance.svg" width="300" height="200" title="맨허튼 거리와 유클리드 거리"/>
 
 <br></br>
 
@@ -191,10 +186,10 @@ kn.score(test_input, test_target) # 0.0
 * 특정 종류의 샘플이 과도하게 많은 샘플링 편향을 가지고 있다면 제대로 된 지도 학습 모델을 만들 수 없다.
 
     * 올바른 훈련 데이터
-        <img src="../assets/lib/images/6.png" width="400" height="150" title="샘플링 편향1"/>
+    
 
     * 잘못된 훈련 데이터
-        <img src="../assets/lib/images/7.png" width="400" height="150" title="샘플링 편향2"/>
+    
 
 ## 넘파이
 * 파이썬의 대표적인 배열 라이브러리
@@ -251,7 +246,6 @@ plt.ylabel('weight')
 plt.show()
 ```
 
-<img src="../assets/lib/images/8.png" width="500" height="400" title="산점도 예시2"/>
 
 ### 핵심 패키지와 함수
 * $seed()$: 넘파이에서 난수를 생성하기 위한 정수 초깃값을 지정한다. 초깃값이 같으면 동일한 난수를 뽑을 수 있다. 따라서 랜덤 함수의 결과를 동일하게 재현하고 싶을 때 사용한다.
@@ -325,7 +319,6 @@ from sklearn.model_selection import train_test_split
 train_input, test_input, train_target, test_target = train_test_split(fish_data, fish_target, random_state=42)
 ```
 
-<img src="../assets/lib/images/9.png" width="400" height="100" title="train_test_split"/>
 
 
 #### 무작위로 데이터를 나누었을 때 <u>샘플이 골고루 섞이지 않는 경우</u>
@@ -371,7 +364,6 @@ plt.ylabel('weight')
 plt.show()
 ```
 
-<img src="../assets/lib/images/10.png" width="500" height="400" title="산점도 예시3"/>
 
 ### 기준을 맞춰라
 * 두 특성의 **스케일**이 다르다 ($=$ 두 특성의 값이 놓인 범위가 다르다.)
@@ -388,7 +380,6 @@ plt.ylabel('weight')
 plt.show()
 ```
 
-<img src="../assets/lib/images/11.png" width="500" height="400" title="산점도 예시4"/>
 
 * **<u>즉, 모델이 실제로 거리를 측정할 때 거의 무게만을 참조한다는 의미</u>**
 
@@ -404,7 +395,6 @@ mean = np.mean(train_input, axis=0)
 std = np.std(train_input, axis=0)
 ```
 
-<img src="../assets/lib/images/12.png" width="200" height="200" title="산점도 예시4"/>
 
 ### 전처리 데이터로 모델 훈련하기
 
@@ -426,7 +416,6 @@ plt.show()
 
 * **브로드캐스팅**: 크기가 다른 넘파이 배열에서 자동으로 사칙 연산을 모든 행이나 열로 **확장**하여 수행하는 기능이다.
 
-<img src="../assets/lib/images/13.png" width="500" height="400" title="산점도 예시4"/>
 
 ---
 
@@ -452,7 +441,6 @@ plt.ylabel('weight')
 plt.show()
 ```
 
-<img src="../assets/lib/images/14.png" width="500" height="400" title="산점도 예시5"/>
 
 ### $scikit-learn$
 * $train\_test\_split()$: 훈련 데이터를 훈련 세트와 테스트 세트로 나누는 함수이다. 테스트 세트로 나눌 비율은 $test\_size$ 매개변수에서 지정할 수 있으며 기본값은 <b>0.25(25%)</b>이다.

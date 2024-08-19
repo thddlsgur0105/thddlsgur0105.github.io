@@ -59,8 +59,6 @@ categories: ML Session
 
 * 맨허튼 거리와 유클리드 거리
 
-![man_distance](../assets/lib/images/Manhattan_distance.svg)
-
 * 확인 문제
 1. 1
 2. 4
