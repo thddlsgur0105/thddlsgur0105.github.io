@@ -21,4 +21,4 @@ plot_tree(dt)
 plt.show()
 ```
 
-[!1](../assets/lib/1.png)
+[!1](/assets/lib/1.png)
