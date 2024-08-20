@@ -20,6 +20,7 @@ plt.figure(figsize=(10,7))
 plot_tree(dt)
 plt.show()
 ```
+![결정트리](/assets/img/sample/1.png)
 
 * 위 결정 트리의 맨 위의 노드를 루트 노드라고 부르고, 맨 아래 끝에 달린 노드를 리프 노드라고 합니다.
 
