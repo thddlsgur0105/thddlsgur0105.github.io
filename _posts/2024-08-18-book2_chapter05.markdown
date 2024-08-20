@@ -5,5 +5,20 @@ date:   2024-08-18 19:02:31 +0900
 categories: ML Session
 ---
 
-# 트리 알고리즘
-.
+# 결정트리
+## 로지스틱 회귀로 와인 분류하기
+* 로지스틱 회귀 모델을 사용했을 때, 그 계수와 가중치의 의미에 대해 설명하기 어렵다.
+
+## 결정 트리
+* 스무고개와 같은 결정 트리는 설명력이 높다.
+* 데이터를 잘 나눌 수 있는 질문을 찾는다면 계속 질문을 추가해 분류 정확도를 높일 수 있다.
+
+```python
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+plt.figure(figsize=(10,7))
+plot_tree(dt)
+plt.show()
+```
+
+[!1](../assets/lib/1.png)
