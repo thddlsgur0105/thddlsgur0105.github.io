@@ -30,6 +30,12 @@ plot_tree(dt, max_depth=1, filled=True, feature_names=['alcohol', 'sugar', 'pH']
 plt.show()
 ```
 
+![결정트리 plotting](/assets/img/sample/2.png)
+
+* 위 구조의 노드는 다음으로 이루어져 있습니다.
+
+![결정트리 구조](/assets/img/sample/3.png)
+
 * max_depth 매개변수를 1로 주어 루트 노드를 제외하고 하나의 노드를 확장해서 그립니다.
 * filled 매개변수에서 클래스에 맞게 노드의 색을 칠할 수 있습니다.
 
@@ -54,6 +60,13 @@ print(dt.score(train_input, train_target))
 print(dt.score(test_input, test_target))
 ```
 
+```python
+plt.figure(figsize=(20, 15))
+plot_tree(dt, filled=True, feature_names=['alcohol', 'sugar', 'pH'])
+plt.show()
+```
+![결정트리 plotting 2](/assets/img/sample/4.png)
+
 * 결정 트리는 표준화 전처리 과정이 필요하지 않습니다.
 
 # 교차 검증과 그리드 서치
@@ -71,6 +84,8 @@ sub_input, val_input, sub_target, val_target = train_test_split(
 * 검증 세트를 떼어 내어 평가하는 과정을 여러 번 반복합니다.
 * 그다음 이 점수를 평균하여 최종 검증 점수를 얻습니다.
 * 3-폴드 교차 검증 말고도, 5-폴드나 10-폴드 교차 검증을 많이 사용합니다. 이러한 방식들은 데이터의 80~90%까지 훈련에 사용할 수 있습니다.
+
+![교차검증](/assets/img/sample/5.png)
 
 ```python
 from sklearn.model_selection import cross_validate
@@ -140,6 +155,8 @@ gs.fit(train_input, train_target)
 * 그리고 각 결정 트리의 예측을 사용해 최종 예측을 만듭니다.
 * 데이터 세트에서 중복을 허용하여 데이터를 샘플링하는 방식을 **부트스트랩 방식**이라고 하고, 이런 방식으로 샘플링하여 분류한 데이터를 **부트스트랩 샘플**이라고 힙니다.
 * 또한 각 노드를 분할할 때 전체 특성 개수의 제곱근만큼의 특성을 선택합니다.
+
+![부트스트랩 샘플링](/assets/img/sample/6.png)
 
 ```python
 import numpy as np
