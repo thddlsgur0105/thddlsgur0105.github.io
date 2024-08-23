@@ -191,7 +191,7 @@ scores=cross_validate(et, train_input, train_target,
 print(np.mean(scores['train_score']), np.mean(scores['test_score']))
 ```
 
-## 그래이디언트 부스팅
+## 그래이디언트 부스팅 -> 머신러닝 모델의 일종
 * 깊이가 얕은 결정 트리를 사용하여 이전 트리의 오차를 보완하는 방식으로 앙상블하는 방법입니다.
 * 깊이가 얕은 결정 트리를 사용하므로 과대적합에 강하고 일반적으로 높은 일반화 성능을 기대할 수 있습니다.
 
@@ -212,6 +212,9 @@ print(np.mean(scores['train_score']), np.mean(scores['test_score']))
 ## 히스토그램 기반 그래이디언트 부스팅
 * 먼저 입력 특성을 256개의 구간으로 나누고, 이 구간 중 하나를 떼어 놓고 누락된 값을 위해 사용합니다.
 
+* 특성 중요도를 평가할 때, Permutation Importance를 사용한다.
+* Permutation Importance란 특성 열들을 하나씩 섞으면서 정확도의 차이(감소율)를 특성마다 비교해보고, **제일 차이가 큰 특성을 중요도가 큰 특성**이라고 결론내리는 방식이다.
+
 ```python
 from sklearn.experimental import enable_hist_gradient_boosting
 from sklearn.ensemble import HistGradientBoostingClassifier
@@ -220,3 +223,5 @@ scores = cross_validate(hgb, train_input, train_target,
                         return_train_score=True)
 print(np.mean(scores['train_score']), np.mean(scores['test_score']))
 ```
+
++ 에이다 부스트 방식 - 앙상블 학습의 또 다른 방식
