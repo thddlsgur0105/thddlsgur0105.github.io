@@ -1,0 +1,169 @@
+---
+layout: post
+title:  "9.18 Chapter 01"
+date:   2024-09-18 19:02:31 +0900
+categories: ML Advanced Session
+---
+
+# 대리점 데이터를 가공하는 테크닉 10
+
+## 데이터를 읽어 들이자
+
+```python
+import pandas as pd
+uriage_data = pd.read_csv("data/chap02/uriage.csv")
+uriage_data.head() # 매출이력
+
+kokyaku_data = pd.read_excel("data/chap02/kokyaku_daicho.xlsx")
+kokyaku_data.head() # 고객정보
+```
+
+* 각 데이터를 읽어 들이고 처음 5행을 표시해서 데이터를 살펴봅니다.
+* 데이터의 오류를 해소하고 정합성을 보장하는 것은 데이터 분석의 기초가 되는 중요한 부분으로, 정합성을 갖추기 위해서는 먼저 데이터의 속성이나 의미를 이해해야 합니다.
+* 정합성 확보는 우선 데이터의 오류를 파악하는 것부터 시작합니다.
+
+## 데이터의 오류를 살펴보자
+
+* uriage_data의 item_name에서 알파벳 대/소문자가 섞여 있는 것을 확인할 수 있습니다.
+* 또한 item_price에는 결측치 NaN을 확인할 수 있습니다.
+
+## 데이터에 오류가 있는 상태로 집계해 보자
+
+```python
+uriage_data["purchase_date"] = pd.to_datetime(uriage_data["purchase_date"])
+uriage_data["purchase_month"] = uriage_data["purchase_date"].dt.strftime("%Y%m")
+res = uriage_data.pivot_table(index="purchase_month", columns="item_name",
+                             aggfunc="size", fill_value=0) # 도수를 셈
+res
+```
+
+* 위 결과를 보면 '상품S'와 '상품s' 처럼 원래 동일한 상품이 다른 상품으로 집계된 것을 확인할 수 있습니다.
+
+* 데이터에 오류가 있는 상태로 집계 및 분석을 실시하면 전혀 의미 없는 결과가 나오기 때문에 데이터 가공이 분석의 전처리로 얼마나 중요한 지 확인할 수 있습니다.
+
+## 상품명 오류를 수정하자
+
+```python
+uriage_data["item_name"] = uriage_data["item_name"].str.upper()
+uriage_data["item_name"] = uriage_data["item_name"].str.replace("  ", "")
+
+uriage_data["item_name"] = uriage_data["item_name"].str.replace(" ", "")
+uriage_data.sort_values(by=["item_name"], ascending=True)
+```
+
+* 위의 코드를 이용해서 상품명에 있는 소문자를 대문자로 변환합니다. 또한 공백을 제거합니다.
+* 이러한 과정을 거쳤지만, 반드시 결과를 검증하는 것을 잊어서는 안 됩니다.
+
+## 금액의 결측치를 수정하자
+
+* 우선 데이터에 결측치가 있는 지 확인합니다.
+
+```python
+uriage_data.isnull().any(axis=0)
+```
+
+* 이 후, 금액의 결손치를 수정해 줍니다.
+
+```python
+fig_is_null = uriage_data["item_price"].isnull()
+for trg in list(uriage_data.loc[fig_is_null, "item_name"].unique()):
+    price = uriage_data.loc[(~fig_is_null) & (uriage_data["item_name"] == trg),
+    "item_price"].max() # loc: 조건에 맞는 행과 열을 가져올 수 있음
+    uriage_data["item_price"].loc[(fig_is_null) & (uriage_data["item_name"] == trg)] = price
+uriage_data.head()
+```
+
+* 다음으로 각 상품의 금액이 정상적으로 수정됐는지 확인합니다. 모든 상품의 최대 금액과 최소 금액이 일치하는 것으로 봐서 성공적으로 금액을 수정했다는 것을 알 수 있습니다.
+
+```python
+for trg in list(uriage_data["item_name"].sort_values().unique()):
+    print(trg + "의 최고가:" + str(uriage_data.loc[uriage_data["item_name"] == trg]
+            ["item_price"].max()) + "의 최저가:" + str(uriage_data.loc[uriage_data
+            ["item_name"] == trg]["item_price"].min(skipna=False)))
+```
+
+## 고객 이름의 오류를 수정하자
+
+```python
+kokyaku_data["고객이름"].head()
+
+uriage_data["customer_name"].head()
+```
+
+* 고객 정보와 매출 이력의 고객 이름을 비교해 보면, 고객 정보의 고객 이름에는 성과 이름 사이에 공백이 있지만, 매출 이력의 고객 이름에는 공백이 없습니다. 또한 공백이 한 칸이나 두 칸, 아니면 공백이 없는 등 서식이 혼재되어 있습니다.
+
+```python
+kokyaku_data["고객이름"] = kokyaku_data["고객이름"].str.replace("  ", "")
+kokyaku_data["고객이름"] = kokyaku_data["고객이름"].str.replace(" ", "")
+kokyaku_data["고객이름"].head()
+```
+
+## 날짜 오류를 수정하자
+
+```python
+fig_is_serial = kokyaku_data["등록일"].astype("str").str.isdigit()
+fig_is_serial.sum()
+```
+* 위 확인 코드를 통해 숫자로 읽히는 데이터가 있음을 확인합니다.
+
+```python
+fromSerial = pd.to_timedelta(kokyaku_data.loc[fig_is_serial, "등록일"]
+                .astype("float"), unit="D") + pd.to_datetime("1900/01/01")
+# 숫자를 날짜로 변환
+fromSerial
+
+fromString = pd.to_datetime(kokyaku_data.loc[~fig_is_serial, "등록일"])
+fromString
+
+kokyaku_data["등록일"] = pd.concat([fromSerial, fromString])
+kokyaku_data
+```
+
+* 숫자로 등록된 부분을 다음과 같이 수정해 줍니다.
+* pd.to_timedelta() 함수는 숫자를 날짜로 변환합니다.
+
+## 고객 이름을 키로 두 개의 데이터를 결합(조인)하자
+
+```python
+join_data = pd.merge(uriage_data, kokyaku_data, left_on="customer_name",
+                    right_on="고객이름", how="left")
+join_data = join_data.drop("customer_name", axis=1)
+join_data
+```
+
+* 위의 과정을 통해 데이터를 가공함으로써 분석에 적합한 데이터의 형태가 되었습니다. 이런 데이터 가공을 **데이터 정제**라고도 합니다.
+
+## 정제한 데이터를 덤프하자
+
+* 깨끗해진 데이터를 파일로 출력(덤프)해두고, 분석할 때 출력한 파일을 다시 읽어 들이면 데이터 정제를 다시 할 필요가 없습니다.
+
+```python
+dump_data = join_data[["purchase_date", "purchase_month", "item_name", "item_price",
+                      "고객이름", "지역", "등록일"]]
+dump_data
+
+dump_data.to_csv("dump_data.csv", index=False)
+```
+
+## 데이터를 집계하자
+
+```python
+import_data = pd.read_csv("dump_data.csv")
+import_data
+
+byItem = import_data.pivot_table(index="purchase_month", columns="item_name",
+                                aggfunc="size", fill_value=0) # 수량
+byItem
+
+byPrice = import_data.pivot_table(index="purchase_month", columns="item_name",
+                    values="item_price", aggfunc="sum", fill_value=0)
+byPrice
+
+byCustomer = import_data.pivot_table(index="purchase_month", columns="고객이름",
+                                    aggfunc="size", fill_value=0)
+byCustomer
+
+byRegion = import_data.pivot_table(index="purchase_month", columns="지역",
+                                  aggfunc="size", fill_value=0)
+byRegion
+```

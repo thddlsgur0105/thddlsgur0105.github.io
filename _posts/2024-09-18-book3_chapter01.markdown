@@ -54,3 +54,66 @@ join_data.head()
 
 ## 필요한 데이터 칼럼을 만들자
 
+```python
+join_data["price"] = join_data["quantity"] * join_data["item_price"]
+join_data[["quantity", "item_price", "price"]].head()
+```
+
+* 데이터를 결합할 때는 신중히 개수를 확인해야 합니다. 되도록 검산이 가능한 데이터 칼럼을 찾고 계산합니다.
+
+## 데이터를 검산하자
+
+```python
+join_data["price"].sum() == transaction["price"].sum()
+```
+
+* 간단히 각각의 price 총합을 확인해 데이터를 검산합니다.
+
+## 각종 통계량을 파악하자
+
+* 데이터 분석을 진행할 때는 먼저 크게 두 가지의 숫자를 파악해야 합니다.
+1. 결손치의 개수
+2. 전체를 파악할 수 있는 숫자감
+
+```python
+# 결손치의 개수를 파악
+join_data.isnull().sum()
+# 전체를 파악할 수 있는 숫자감을 확인
+join_data.describe()
+```
+
+## 월별로 데이터를 집계해 보자
+* 전체적으로 매출이 늘어나고 있는지 줄어들고 있는지를 파악하는 것이 분석의 첫걸음이라고 할 수 있습니다.
+
+```python
+join_data.groupby("payment_month").sum(numeric_only=True)["price"]
+```
+
+## 월별, 상품별로 데이터를 집계해 보자
+
+```python
+join_data.groupby(["payment_month", "item_name"]).sum(numeric_only=True)[["price", "quantity"]]
+
+pd.pivot_table(join_data, index="item_name", columns="payment_month", values=["price", "quantity"], aggfunc="sum")
+```
+
+* pivot_table을 통해 집계할 때, 행에는 상품명, 칼럼에는 월이 오게 index와 columns로 지정합니다. values에는 집계하고 싶은 칼럼(price, quantity), aggfunc에는 집계 방법을 지정합니다.
+
+## 상품별 매출 추이를 가시화해 보자
+
+```python
+graph_data = pd.pivot_table(join_data, index="payment_month", columns="item_name",
+                           values="price", aggfunc="sum")
+graph_data.head()
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+plt.plot(list(graph_data.index), graph_data["PC-A"], label="PC-A")
+plt.plot(list(graph_data.index), graph_data["PC-B"], label="PC-B")
+plt.plot(list(graph_data.index), graph_data["PC-C"], label="PC-C")
+plt.plot(list(graph_data.index), graph_data["PC-D"], label="PC-D")
+plt.plot(list(graph_data.index), graph_data["PC-E"], label="PC-E")
+plt.legend()
+```
+
+![데이터 가시화](/assets/img/sample/30.png)
