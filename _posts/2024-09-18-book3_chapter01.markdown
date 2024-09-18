@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "9.18 Chapter 01"
+date:   2024-09-18 19:02:31 +0900
+categories: ML Advanced Session
+---
+
+# 웹에서 주문 수를 분석하는 테크닉 10
+
+## 데이터를 읽어 들이자
+
+```python
+import pandas as pd
+customer_master = pd.read_csv("customer_master.csv")
+customer_master.head()
+```
+
+* 파이썬 라이브러리 판다스로 임포트를 한 뒤, read_csv를 사용해서 데이터 프레임형 변수에 저장합니다. 그 뒤 처음 5행을 표시하는 코드입니다.
+
+* 이를 통해 어떤 데이터가 존재하고 각 데이터 간에 어떤 관계가 있는지와 같은 데이터의 큰 틀을 확인할 수 있습니다.
+
+* 우선 데이터 전체를 파악하는 것이 중요하고, 그래서 되도록 **상세하게 나와 있는 쪽에 맞추어 데이터를 가공**하는 것이 중요합니다.
+
+## 데이터를 결합(유니언)해 보자 - 세로 방향 결합
+
+```python
+transaction_2 = pd.read_csv("transaction_2.csv")
+transaction = pd.concat([transaction_1, transaction_2], ignore_index=True)
+transaction.head()
+```
+
+* concat 함수를 통해 데이터를 행 방향으로 늘리어 세로로 결합합니다. 이를 통해 데이터의 개수에 변화가 있을 것입니다.
+
+## 매출 데이터끼리 결합(조인)해 보자 - 가로 방향 결합
+
+* 데이터를 조인할 때는 **기준이 되는 데이터를 정확하게 결정하고, 어떤 칼럼을 키로 조인할 지를 생각**합니다.
+
+* 이를 위해, 부족한(추가하고 싶은) 데이터 칼럼이 무엇인가와 공통되는 데이터 칼럼은 무엇인가를 생각합니다.
+
+```python
+join_data = pd.merge(transaction_detail, transaction[["transaction_id", "payment_date", "customer_id"]], on="transaction_id", how="left")
+join_data.head()
+```
+
+* merge함수를 통해 기준은 transaction_detail, 조인키는 결합할 transaction 데이터의 필요한 칼럼 transaction_id 입니다. 이 키를 바탕으로 transaction 데이터의 칼럼들을 추가합니다.
+
+## 마스터데이터를 결합(조인)해 보자
+
+```python
+join_data = pd.merge(join_data, customer_master, on="customer_id", how="left")
+join_data = pd.merge(join_data, item_master, on="item_id", how="left")
+join_data.head()
+```
+
+## 필요한 데이터 칼럼을 만들자
+
