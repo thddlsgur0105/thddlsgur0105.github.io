@@ -2,7 +2,7 @@
 layout: post
 title:  "9.18 Chapter 01"
 date:   2024-09-18 19:02:31 +0900
-categories: ML Advanced Session
+categories: ML Advanced_Session
 ---
 
 # 웹에서 주문 수를 분석하는 테크닉 10
