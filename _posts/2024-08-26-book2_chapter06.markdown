@@ -121,5 +121,3 @@ draw_fruits(pca.components_.reshape(-1, 100, 100))
 ```python
 plt.plot(pca.explained_variance_ratio_)
 ```
-
-![설명된 분산](/assets/img/sample/31.png)
