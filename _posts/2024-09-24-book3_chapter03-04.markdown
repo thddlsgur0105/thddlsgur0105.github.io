@@ -463,3 +463,89 @@ predict_data.head()
 
 ![연월 회원 데이터](/assets/img/sample/54.png)
 
+* `count_pred` 칼럼은 예측하고 싶은 달의 데이터입니다.
+* `count_0`이 1개월 전의 데이터입니다.
+* 이 처럼 과거 6개월의 데이터를 나열합니다.
+
+```python
+predict_data = predict_data.dropna()
+predict_data = predict_data.reset_index(drop=True)
+predict_data.head()
+```
+
+* 아직 가입 기간이 짧아서 데이터가 존재하지 않는 경우도 있으므로, 결측치를 처리하는 코드도 작성합니다.
+
+## 특징이 되는 변수를 추가하자
+
+```python
+predict_data = pd.merge(predict_data, customer[['customer_id', 'start_date']], on='customer_id', how='left')
+predict_data.head()
+```
+
+* 회원 기간은 시계열 변화를 볼 수 있기 때문에 이번 데이터처럼 기본 데이터가 시계열 데이터인 경우 유효할 가능성이 있습니다.
+* 고객 데이터인 `customer`의 `start_date` 칼럼을 앞에서 작성한 `predict_data`에 결합합니다.
+
+```python
+predict_data['now_date'] = pd.to_datetime(predict_data['연월'], format='%Y%m')
+predict_data['start_date'] = pd.to_datetime(predict_data['start_date'])
+from dateutil.relativedelta import relativedelta
+predict_data['period'] = None
+for i in range(len(predict_data)):
+    delta = relativedelta(predict_data['now_date'][i], predict_data['start_date'][i])
+    predict_data['period'][i] = delta.years*12 + delta.months
+predict_data.head()
+```
+
+![period 칼럼 추가](/assets/img/sample/55.png)
+
+## 다음 달 이용 횟수를 예측하는 모델을 구축하자
+
+* 2018년 4월 이후에 새로 가입한 회원만 이용해서 모델을 작성합니다.
+* 데이터를 학습용 데이터와 평가용 데이터로 나눠서 학습을 진행합니다.
+
+```python
+predict_data = predict_data.loc[predict_data['start_date']>=pd.to_datetime('20180401')]
+from sklearn import linear_model
+from sklearn.model_selection import train_test_split
+model = linear_model.LinearRegression()
+X = predict_data[['count_0', 'count_1', 'count_2', 'count_3', 'count_4', 'count_5', 'period']]
+y = predict_data['count_pred']
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+model.fit(X_train, y_train)
+```
+
+* X: 예측에 사용할 변수(**설명 변수**), y: 예측하고 싶은 변수(**목적 변수**)
+* 학습용 데이터와 평가용 데이터를 나눠 학습을 진행함으로써, **모델의 과적합을 방지합니다.**
+
+```python
+print(model.score(X_train, y_train)) # 0.5996778634722448
+print(model.score(X_test, y_test)) # 0.628938039638544
+```
+
+* 그 후 `score`함수를 사용해, 모델의 정확도를 평가하면 위와 같습니다.
+
+## 모델에 기여하는 변수를 확인하자
+
+```python
+coef = pd.DataFrame({'feature_names': X.columns, 'coefficient': model.coef_})
+coef
+```
+
+![모델에 기여하는 변수](/assets/img/sample/56.png)
+
+* 설명 변수마다 기여하는 계수를 확인합니다.
+* `count_0`가 가장 크고, 과거로 거슬러 올라갈수록 기여도가 작아지는 경향이 있다는 것을 알 수 있습니다.
+
+## 다음 달의 이용 횟수를 예측하자
+
+```python
+x1 = [3,4,4,6,8,7,8]
+x2 = [2,2,3,3,4,6,8]
+x_pred = [x1, x2]
+
+model.predict(x_pred)
+# array([3.79341431, 1.99642155])
+```
+
+* 임의로 두 가상의 회원 데이터를 작성하고, 방문 횟수를 예측합니다.
+* 첫 번째는 3.8회, 두 번째는 1.9회로 예측했습니다.
