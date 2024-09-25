@@ -274,7 +274,7 @@ customer_stay.describe()
 ## 전제조건
 * 여기서는 5개의 데이터 중에서 use_log.csv와 customer_join.csv만 사용합니다.
 
-
+---
 |No.|파일 이름|개요|
 |:---:|:---:|:---:|
 |1|use_log.csv|센터의 이용 이력 데이터. 기간은 2018년 4월 ~ 2019년 3월|
