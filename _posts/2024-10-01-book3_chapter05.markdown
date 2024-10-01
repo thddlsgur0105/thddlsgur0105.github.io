@@ -20,4 +20,5 @@ categories: ML Advanced_Session
 |5|customer_join.csv|3장에서 작성한 이용 이력을 포함한 고객 데이터|
 |6|use_log_months.csv|4장에서 작성한 이용 이력을 연월/고객별로 집계한 데이터|
 
-# 
+## 데이터를 읽어들이고 이용 데이터를 수정하자
+
