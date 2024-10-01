@@ -22,3 +22,48 @@ categories: ML Advanced_Session
 
 ## 데이터를 읽어들이고 이용 데이터를 수정하자
 
+```python
+import pandas as pd
+customer = pd.read_csv('data/chap05/customer_join.csv')
+uselog_months = pd.read_csv('data/chap05/uselog_months.csv')
+
+# 이번 달과 1개월 전의 이용 횟수를 집계
+year_months = list(uselog_months['연월'].unique())
+uselog = pd.DataFrame()
+for i in range(1, len(year_months)):
+    tmp = uselog_months.loc[uselog_months['연월']==year_months[i]]
+    tmp.rename(columns={'count': 'count_0'}, inplace=True)
+    tmp_before = uselog_months.loc[uselog_months['연월']==year_months[i-1]]
+    del tmp_before['연월']
+    tmp_before.rename(columns={'count': 'count_1'}, inplace=True)
+    tmp = pd.merge(tmp, tmp_before, on='customer_id', how='left')
+    uselog = pd.concat([uselog, tmp], ignore_index=True)
+uselog.head()
+```
+
+* 우선, use_log_months.csv와 customer_join.csv를 읽어옵니다.
+* 과거 6개월분의 데이터로부터 이용 횟수를 예측하는 경우, **가입 5개월 이내인 회원의 탈퇴는 예측할 수 없습니다.** 또한 불과 몇 개월만에 그만둔 회원도 많기에 과거 6개월분의 데이터를 이용하여 예측하는 것은 의미가 없습니다.
+* **이로 인해 여기에서는 그 달과 1개월 전의 이용 이력만으로 데이터를 작성합니다.**
+
+## 탈퇴 전월의 고객 데이터를 작성하자
+
+* 탈퇴를 예측하는 목적은 탈퇴를 미연에 방지하는 것입니다. **즉, 탈퇴 월이 2018년 8월인 경우 그 1개월 전인 7월의 데이터로부터 8월에 탈퇴 신청을 할 확률을 예측해야 합니다.**
+
+```python
+from dateutil.relativedelta import relativedelta
+exit_customer = customer.loc[customer['is_deleted']==1]
+exit_customer['exit_date'] = None
+exit_customer['end_date'] = pd.to_datetime(exit_customer['end_date'])
+for i in range(len(exit_customer)): # end_date에서 한 달을 뺀 값을 계산합니다.
+    exit_customer['exit_date'].iloc[i] = exit_customer['end_date'].iloc[i] - relativedelta(months=1)
+exit_customer['연월'] = pd.to_datetime(exit_customer['exit_date']).dt.strftime('%Y%m')
+uselog['연월'] = uselog['연월'].astype(str)
+exit_uselog = pd.merge(uselog, exit_customer, on=['customer_id', '연월'], how='left')
+print(len(uselog))
+exit_uselog.head()
+```
+
+* Q: name, class, gender, start_date 같은 컬럼에 대해서는 왜 결측치가 생기는 거지?
+* exit_date라는 칼럼을 작성하고 end_date의 1개월 전을 계산합니다.
+
+## 지속 회원의 데이터를 작성하자.
