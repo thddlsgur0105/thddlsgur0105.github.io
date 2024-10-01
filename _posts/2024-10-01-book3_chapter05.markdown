@@ -1,0 +1,23 @@
+---
+layout: post
+title:  "10.01 Chapter 05"
+date:   2024-10-01 19:02:31 +0900
+categories: ML Advanced_Session
+---
+
+# 회원 탈퇴를 예측하는 테크닉 10
+
+* **의사결정 트리**라는 지도학습의 분류 알고리즘을 통해 탈퇴를 예측
+
+* 전제조건
+
+|No.|파일 이름|개요|
+|:---:|:---:|:---:|
+|1|use_log.csv|스포츠 센터의 이용 이력 데이터. 기간은 2018년 4월 ~ 2019년 3월|
+|2|customer_master.csv|2019년 3월 말 시점의 회원 데이터|
+|3|class_master.csv|회원 구분 데이터 (종일, 주간, 야간)|
+|4|campaign_master.csv|행사 구분 데이터 (입회비 유무 등)|
+|5|customer_join.csv|3장에서 작성한 이용 이력을 포함한 고객 데이터|
+|6|use_log_months.csv|4장에서 작성한 이용 이력을 연월/고객별로 집계한 데이터|
+
+# 
