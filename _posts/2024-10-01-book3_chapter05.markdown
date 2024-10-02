@@ -41,7 +41,7 @@ for i in range(1, len(year_months)):
 uselog.head()
 ```
 
-* 우선, use_log_months.csv와 customer_join.csv를 읽어옵니다.
+* 우선, `use_log_months.csv`와 `customer_join.csv`를 읽어옵니다.
 * 과거 6개월분의 데이터로부터 이용 횟수를 예측하는 경우, **가입 5개월 이내인 회원의 탈퇴는 예측할 수 없습니다.** 또한 불과 몇 개월만에 그만둔 회원도 많기에 과거 6개월분의 데이터를 이용하여 예측하는 것은 의미가 없습니다.
 * **이로 인해 여기에서는 그 달과 1개월 전의 이용 이력만으로 데이터를 작성합니다.**
 
@@ -67,3 +67,72 @@ exit_uselog.head()
 * exit_date라는 칼럼을 작성하고 end_date의 1개월 전을 계산합니다.
 
 ## 지속 회원의 데이터를 작성하자.
+
+```python
+conti_customer = customer.loc[customer['is_deleted']==0]
+conti_uselog = pd.merge(uselog, conti_customer, on=['customer_id'], how='left')
+print(len(conti_uselog))
+conti_uselog = conti_uselog.dropna(subset=['name']) # name 칼럼의 결손 데이터 제거
+print(len(conti_uselog))
+
+# is_deleted==0으로 처음 탈퇴회원을 필터링했는데, 왜 탈퇴회원에 대한 결손 데이터가 또 생기는 거지?
+```
+
+* `name` 칼럼의 결손 데이터를 제거하고 탈퇴 회원을 제거합니다.
+* 간단히 지속 회원 데이터도 회원당 1개가 되게 언더샘플링합니다. 즉, 2018년 5월 A씨와 2018년 12월 A 씨 중 하나만 선택한다는 뜻입니다.
+
+![predict_data.csv](/assets/img/sample/57.png)
+
+## 예측할 달의 재적 기간을 작성하자
+
+```python
+predict_data['period'] = 0 # 모든 회원들의 uselog 정보가 결합된 데이터
+predict_data['now_date'] = pd.to_datetime(predict_data['연월'], format='%Y%m')
+predict_data['start_date'] = pd.to_datetime(predict_data['start_date'])
+for i in range(len(predict_data)):
+    delta = relativedelta(predict_data['now_date'][i], predict_data['start_date'][i])
+    predict_data['period'][i] = int(delta.years*12 + delta.months)
+predict_data.head()
+```
+
+![predict_data_period.csv](/assets/img/sample/58.png)
+
+* 재적 기간은 연월 칼럼과 `start_date` 칼럼의 차이로 구할 수 있습니다.
+
+## 결측치를 제거하자
+
+```python
+# dropna의 subset으로 특정 칼럼을 지정하면, 특정 칼럼의 결측 데이터를 제거합니다.
+predict_data = predict_data.dropna(subset=['count_1'])
+predict_data.isna().sum()
+```
+
+* `end_date`와 `exit_date`는 탈퇴 고객만 있으며, 유지 회원은 결측치가 됩니다.
+* 따라서 유의미한 결측치인 `count_1` 의 결손 데이터만 제거합니다.
+* `dropna`의 `subset`으로 특정 칼럼을 지정하면, 특정 칼럼의 결측 데이터를 제거합니다.
+
+## 문자열 변수를 처리할 수 있게 가공하자
+* 가입 캠페인 구분, 회원 구분, 성별과 같은 문자열 데이터를 **카테고리 변수**라고 합니다.
+* 이런 데이터를 활용하기 위해서 앞에서 `routine_flg`를 작성한 것처럼 플래그를 만듭니다. 이를 **더미 변수**라고 합니다.
+
+|No.|변수 종류|변수 이름|
+|:---:|:---:|:---:|
+|1|설명 변수|count_1, campaign, name, class_name, gender, routine_flg, period|
+|2|목적 변수|is_deleted|
+
+```python
+# 카테고리 변수를 더미 변수로 만듭니다.
+predict_data = pd.get_dummies(predict_data)
+predict_data.head()
+```
+
+```python
+del predict_data['campaign_name_2_일반']
+del predict_data['class_name_2_야간']
+del predict_data['gender_M']
+predict_data.head()
+```
+
+* 각 더미 변수에서 하나씩 지워 필요하지 않은 칼럼을 제거합니다.
+
+## 의사결정 트리를 사용해서 탈퇴 예측 모델을 구축하자
