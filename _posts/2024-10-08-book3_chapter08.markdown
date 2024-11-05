@@ -1,8 +1,0 @@
----
-layout: post
-title:  "10.08 Chapter 08"
-date:   2024-10-08 19:02:31 +0900
-categories: ML Advanced_Session
----
-
-# 
