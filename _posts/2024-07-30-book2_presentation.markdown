@@ -3,8 +3,6 @@ layout: post
 title:  "7.30 발표자료"
 date:   2024-07-28 21:14:31 +0900
 categories: ML Session
-toc: true
-pin: true
 ---
 
 # 01. 나의 첫 머신러닝

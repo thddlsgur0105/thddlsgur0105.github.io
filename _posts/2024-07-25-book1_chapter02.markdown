@@ -3,8 +3,6 @@ layout: post
 title:  "Chapter 02. 모집단과 표본추출"
 date:   2024-07-19 21:14:31 +0900
 categories: ML Session
-toc: true
-pin: true
 ---
 
 * 진도: 183p~
