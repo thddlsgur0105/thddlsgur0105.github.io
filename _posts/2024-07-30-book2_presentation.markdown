@@ -5,9 +5,6 @@ date:   2024-07-28 21:14:31 +0900
 categories: ML Session
 toc: true
 pin: true
-image:
-  path: thumbnail.png
-  alt: image alternative text
 ---
 
 # 01. 나의 첫 머신러닝
