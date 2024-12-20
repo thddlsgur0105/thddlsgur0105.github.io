@@ -3,6 +3,11 @@ layout: post
 title:  "Chapter 02. 훈련 세트와 테스트 세트"
 date:   2024-07-28 21:14:31 +0900
 categories: ML Session
+toc: true
+pin: true
+image:
+  path: thumbnail.png
+  alt: image alternative text
 ---
 
 # 훈련 세트와 테스트 세트
